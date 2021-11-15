@@ -9,21 +9,21 @@ library(readr)
 
 source("R/helper_functions.R")
 
-lifted <- read_bed("outputs/ma2015_windows_hglift_ars-ucd1.2_0.6remap.bed")
+lifted <- read_bed("outputs/ma2015_hglft.bed")
 
-windows <- read_tsv("outputs/ma2015_windows.txt")
+positions <- read_tsv("outputs/ma2015_marker_positions.txt")
 
-colnames(windows)[1:3] <- paste(colnames(windows)[1:3], "_old", sep = "")
+
 
 
 
 combined <- inner_join(lifted,
-                       windows,
-                       by = c("name" = "window_id"))
+                       positions,
+                       by = c("name" = "marker"))
 
 
 
-plot_lifted_positions <- qplot(x = end, y = window_end_position_cM,
+plot_lifted_positions <- qplot(x = end, y = position_cM,
                                data = combined) +
     facet_wrap(~ chr, scale = "free")
 
@@ -33,9 +33,9 @@ plot_lifted_positions <- qplot(x = end, y = window_end_position_cM,
 
 lifted_map_positions <- data.frame(chr = combined$chr,
                                    position_bp = combined$end,
-                                   position_bp_old = combined$end_old,
-                                   name = combined$window_end_marker,
-                                   position_cM = combined$window_end_position_cM,
+                                   position_bp_old = combined$position_bp,
+                                   name = combined$name,
+                                   position_cM = combined$position_cM,
                                    stringsAsFactors = FALSE)
 
 lifted_map_positions <- filter(lifted_map_positions,
@@ -140,9 +140,11 @@ make_shapeit_map <- function(windows) {
 }
 
 
+system("mkdir outputs/ma2015_shapeit_ARS-UCD1.2")
+
 for (chr_ix in 1:length(windows_lifted_filtered_chr)) {
     write.table(make_shapeit_map(windows_lifted_filtered_chr[[chr_ix]]),
-                file = paste("outputs/ma2015_shapeit/",
+                file = paste("outputs/ma2015_shapeit_ARS-UCD1.2/",
                              names(windows_lifted_filtered_chr)[chr_ix],
                              ".txt",
                              sep = ""),
