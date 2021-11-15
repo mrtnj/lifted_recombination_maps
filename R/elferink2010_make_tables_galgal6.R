@@ -131,3 +131,30 @@ plot_lifted_filtered_positions <- qplot(x = end, y = window_end_position_cM,
 plot_lifted_positions + plot_lifted_filtered_positions
 
 
+
+
+## Create map file (SHAPEIT2 format)
+
+windows_lifted_filtered_chr <- split(windows_lifted_filtered,
+                                     windows_lifted_filtered$chr)
+
+
+make_shapeit_map <- function(windows) {
+    tibble(pos = windows$end,
+           rate = windows$rec_rate,
+           cM = windows$window_end_position_cM)
+}
+
+system("mkdir outputs/elferink2010_shapeit_GRCg6a")
+
+for (chr_ix in 1:length(windows_lifted_filtered_chr)) {
+    write.table(make_shapeit_map(windows_lifted_filtered_chr[[chr_ix]]),
+                file = paste("outputs/elferink2010_shapeit_GRCg6a/",
+                             names(windows_lifted_filtered_chr)[chr_ix],
+                             ".txt",
+                             sep = ""),
+                row.names = FALSE,
+                col.names = FALSE,
+                quote = FALSE,
+                sep = "\t")
+}

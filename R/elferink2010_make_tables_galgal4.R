@@ -138,11 +138,11 @@ make_shapeit_map <- function(windows) {
            cM = windows$window_end_position_cM)
 }
 
-system("mkdir outputs/elferink2010_shapeit")
+system("mkdir outputs/elferink2010_shapeit_Galgal4")
 
 for (chr_ix in 1:length(windows_lifted_filtered_chr)) {
     write.table(make_shapeit_map(windows_lifted_filtered_chr[[chr_ix]]),
-                file = paste("outputs/elferink2010_shapeit/",
+                file = paste("outputs/elferink2010_shapeit_Galgal4/",
                              names(windows_lifted_filtered_chr)[chr_ix],
                              ".txt",
                              sep = ""),
