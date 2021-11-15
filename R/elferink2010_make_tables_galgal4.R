@@ -5,6 +5,7 @@ library(dplyr)
 library(ggplot2)
 library(patchwork)
 library(purrr)
+library(tibble)
 library(readr)
 
 source("R/helper_functions.R")
@@ -63,29 +64,9 @@ n_markers_filter1 <- sum(map_dbl(lifted_map_chr_filter1, nrow))
 
 
 
-## Check how far each interval has been lifted, compared to the median distance
-
-get_distance_lifted <- function(chr) {
-    chr$distance_lifted <- abs(chr$position_bp - chr$position_bp_old)
-    chr$median_distance_lifted <- median(chr$distance_lifted)
-    chr
-}
-
-lifted_map_chr_filter1_distance <- map(lifted_map_chr_filter1, get_distance_lifted)
-
-lifted_map_chr_filter2 <- map(lifted_map_chr_filter1_distance,
-                              function(chr) {
-                                  filter(chr, distance_lifted < median_distance_lifted + 2e6)
-                              })
-
-n_markers_filter2 <- sum(map_dbl(lifted_map_chr_filter2, nrow))
-
-
-
-
 ## Create windows from retained lifted markers
 
-windows_lifted <- map_dfr(lifted_map_chr_filter2,
+windows_lifted <- map_dfr(lifted_map_chr_filter1,
                           function(on_chr) {
                               get_windows_chr(chr = on_chr$chr,
                                               position_bp = on_chr$position_bp,
@@ -124,6 +105,32 @@ plot_lifted_filtered_positions <- qplot(x = end, y = window_end_position_cM,
 
 
 plot_lifted_positions + plot_lifted_filtered_positions
+
+
+## Write out the filtered windows
+
+write.table(windows_lifted_filtered,
+            file = "outputs/elferink2010_Galgal4_windows.txt",
+            sep = "\t",
+            quote = FALSE,
+            row.names = FALSE,
+            col.names = TRUE)
+
+
+## Create map file (single file format)
+
+map_file <- tibble(marker = windows_lifted_filtered$window_end_marker,
+                   chr = windows_lifted_filtered$chr,
+                   position_bp = windows_lifted_filtered$end,
+                   position_cM = windows_lifted_filtered$window_end_position_cM)
+
+write.table(map_file,
+            file = "outputs/elferink2010_Galgal4.txt",
+            sep = "\t",
+            quote = FALSE,
+            row.names = FALSE,
+            col.names = TRUE)
+
 
 
 ## Create map file (SHAPEIT2 format)

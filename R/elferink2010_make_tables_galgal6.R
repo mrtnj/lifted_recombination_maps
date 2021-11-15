@@ -68,29 +68,11 @@ lifted_map_chr_filter1 <- lifted_map_chr_filter1[names(lifted_map_chr_filter1) !
 
 
 
-## Check how far each interval has been lifted, compared to the median distance
-
-get_distance_lifted <- function(chr) {
-    chr$distance_lifted <- abs(chr$position_bp - chr$position_bp_old)
-    chr$median_distance_lifted <- median(chr$distance_lifted)
-    chr
-}
-
-lifted_map_chr_filter1_distance <- map(lifted_map_chr_filter1, get_distance_lifted)
-
-lifted_map_chr_filter2 <- map(lifted_map_chr_filter1_distance,
-                              function(chr) {
-                                  filter(chr, distance_lifted < median_distance_lifted + 2e6)
-                              })
-
-n_markers_filter2 <- sum(map_dbl(lifted_map_chr_filter2, nrow))
-
-
 
 
 ## Create windows from retained lifted markers
 
-windows_lifted <- map_dfr(lifted_map_chr_filter2,
+windows_lifted <- map_dfr(lifted_map_chr_filter1,
                           function(on_chr) {
                               get_windows_chr(chr = on_chr$chr,
                                               position_bp = on_chr$position_bp,
