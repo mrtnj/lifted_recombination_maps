@@ -108,6 +108,25 @@ plot_lifted_filtered_positions <- qplot(x = end, y = window_end_position_cM,
 plot_lifted_positions + plot_lifted_filtered_positions
 
 
+
+## Create map file (single file format)
+
+map_file <- tibble(marker = windows_lifted_filtered$window_end_marker,
+                   chr = windows_lifted_filtered$chr,
+                   position_bp = windows_lifted_filtered$end,
+                   position_cM = windows_lifted_filtered$window_end_position_cM)
+
+write.table(map_file,
+            file = "outputs/ma2015_ARS-UCD1.2.txt",
+            sep = "\t",
+            quote = FALSE,
+            row.names = FALSE,
+            col.names = TRUE)
+
+
+
+
+
 ## Create map file (SHAPEIT2 format)
 
 windows_lifted_filtered_chr <- split(windows_lifted_filtered,
