@@ -34,6 +34,27 @@ write.table(map_file,
 
 
 
+positions1.3 <- read_tsv("blat/brekke2023_positions1.3.txt")
+
+combined <- inner_join(map_file, positions1.3)
+
+assert_that(all(combined$position_bp == combined$position_bp1.3))
+
+assert_that(all(combined$chr == paste("chr", combined$chr1.3, sep = "")))
+
+
+map_file1.3 <- tibble(marker = combined$marker,
+                      chr = combined$chr,
+                      position_bp = combined$position_bp1.3,
+                      position_cM = combined$position_cM)
+
+
+write.table(map_file1.3,
+            file = "outputs/brekke2023_ARS-UCD1.3.txt",
+            sep = "\t",
+            quote = FALSE,
+            row.names = FALSE,
+            col.names = TRUE)
 
 
 ## Create map file (SHAPEIT2 format)

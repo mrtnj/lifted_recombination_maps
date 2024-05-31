@@ -1,4 +1,6 @@
 
+## Analyse blat alignments to find unique full length matches for flanking sequence
+
 library(assertthat)
 library(readr)
 
@@ -39,9 +41,9 @@ full_length_unique <- filter(full_length, ! q_name %in% duplicated_markers)
 
 assert_that(all(full_length_unique$strand == "+"))
 
-marker_positions <- tibble(marker = full_length$q_name,
-                           chr1.3 = full_length$t_name,
-                           position_bp1.3 = full_length$t_end)
+marker_positions <- tibble(marker = full_length_unique$q_name,
+                           chr1.3 = full_length_unique$t_name,
+                           position_bp1.3 = full_length_unique$t_end)
 
 options(scipen = 1e6)
 
