@@ -5,7 +5,7 @@ library(readr)
 
 
 
-cattle <- read_tsv("outputs/ma2015_ARS-UCD1.2.txt")
+cattle <- read_tsv("outputs/brekke2023_ARS-UCD1.2.txt")
 
 assembly_report <- read_tsv("data/GCA_002263795.2_ARS-UCD1.2_assembly_report.txt",
                             comment = "#",
@@ -54,7 +54,7 @@ windows_df <- Reduce(rbind, windows)
 
 
 write.table(windows_df,
-            file = "outputs/ma2015_ARS-UCD1.2_Mbp_smoothed.txt",
+            file = "outputs/brekke2023_ARS-UCD1.2_Mbp_smoothed.txt",
             sep = "\t",
             quote = FALSE,
             row.names = FALSE,
