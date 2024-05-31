@@ -13,10 +13,9 @@ Map in Figshare repository https://figshare.com/articles/dataset/Autosomal_linka
 
 Reference genome: ARS-UCD1.2
 
-Lifting by BLAT alignment:
+Lifting by BLAT alignment confirmed that all positions that can be aligned are consistent between genome versions.
 
 * ARS-UCD1.2 -> ARS-UCD1.3
-
 
 
 ## Chicken
